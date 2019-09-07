@@ -1,7 +1,8 @@
 <template>
   <div>
-    <h1>Home</h1>
-    <Lights />
+    <div class="container">
+      <Lights />
+    </div>
   </div>
 </template>
 
@@ -14,3 +15,4 @@ export default {
 };
 </script>
 
+<style></style>

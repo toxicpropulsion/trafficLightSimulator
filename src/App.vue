@@ -1,6 +1,8 @@
 <template>
   <div id="app">
-    <p>header kek</p>
+    <div class="container">
+      <h1>Симулятор светофора</h1>
+    </div>
     <router-view></router-view>
   </div>
 </template>
@@ -11,3 +13,10 @@ export default {
 };
 </script>
 
+<style>
+.container {
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+}
+</style>
