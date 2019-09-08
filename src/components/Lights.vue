@@ -1,18 +1,11 @@
 <template>
   <div>
-    <pre>
-      previosSignal: {{this.$route.params.prev}}
-      currentSignal: {{this.$route.name}}
-      time: {{time}}
-    </pre>
     <p align="center">Смена сигнала: {{this.time / 1000}} сек.</p>
     <div class="lights">
       <div
         v-for="(value, color, index) in signals"
         :key="index"
-        @click="goto(color)"
-        class="signal"
-        :class="{active: $route.name == color, fading: value.fading}"
+        :class="{active: $route.name == color, fading: value.fading, signal: true}"
         :style="{backgroundColor: color}"
       ></div>
     </div>
@@ -43,8 +36,6 @@ export default {
       const prev = this.$route.params.prev;
       const current = this.$route.name;
 
-      let result;
-
       switch (current) {
         case 'red':
         case 'green':
@@ -62,7 +53,10 @@ export default {
   },
   methods: {
     goto(signal) {
-      this.$router.push({ name: signal, params: { prev: this.$route.name } });
+      this.$router.push({
+        name: signal,
+        params: { prev: this.$route.name }
+      });
     }
   },
   watch: {
@@ -116,9 +110,6 @@ export default {
 }
 
 .lights {
-  color: white;
-  font-size: 10px;
-
   flex-flow: column;
   justify-content: space-evenly;
   align-items: center;
