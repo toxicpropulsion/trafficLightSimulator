@@ -1,6 +1,6 @@
 <template>
   <div>
-    <p align="center">Смена сигнала: {{this.time / 1000}} сек.</p>
+    <p align="center">Смена сигнала: {{this.time | round}} сек.</p>
     <div class="lights">
       <div
         v-for="(value, color, index) in signals"
@@ -59,6 +59,11 @@ export default {
       });
     }
   },
+  filters: {
+    round(value) {
+      return Math.round(value / 1000);
+    }
+  },
   watch: {
     time: function(value) {
       if (value <= 3000) {
@@ -69,8 +74,8 @@ export default {
   mounted() {
     this.$on('startTimer', () => {
       this.interval = setInterval(() => {
-        this.time -= 1000;
-      }, 1000);
+        this.time -= 100;
+      }, 100);
     });
 
     this.$on('updateTimer', () => {
