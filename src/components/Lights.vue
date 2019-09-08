@@ -103,10 +103,15 @@ export default {
 <style>
 @keyframes pulse {
   0% {
-    opacity: 0;
+    opacity: 0.2;
   }
-  100% {
+
+  50% {
     opacity: 1;
+  }
+
+  100% {
+    opacity: 0.2;
   }
 }
 
@@ -137,6 +142,6 @@ export default {
 }
 
 .fading {
-  animation: pulse 0.7s infinite;
+  animation: pulse 0.5s infinite;
 }
 </style>
