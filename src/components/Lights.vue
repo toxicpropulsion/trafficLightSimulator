@@ -3,8 +3,9 @@
     <pre>
       previosSignal: {{this.$route.params.prev}}
       currentSignal: {{this.$route.name}}
-      timeToChange: {{timeToChange}}
+      time: {{time}}
     </pre>
+    <p align="center">Смена сигнала: {{this.time / 1000}} сек.</p>
     <div class="lights">
       <div
         v-for="(value, color, index) in signals"
@@ -19,7 +20,8 @@
 </template>
 
 <script>
-import { setTimeout } from 'timers';
+import { setTimeout, setInterval } from 'timers';
+
 export default {
   name: 'Lights',
   data() {
@@ -29,7 +31,8 @@ export default {
         yellow: { color: 'yellow', time: 3000, fading: false },
         green: { color: 'green', time: 15000, fading: false }
       },
-      time: this.timeToChange
+      time: null,
+      interval: null
     };
   },
   computed: {
@@ -47,10 +50,10 @@ export default {
         case 'green':
           return 'yellow';
         case 'yellow':
-          if (prev === 'red') {
-            return 'green';
-          } else {
+          if (prev === 'green') {
             return 'red';
+          } else {
+            return 'green';
           }
         default:
           console.log('The traffic light is broken :(');
@@ -60,11 +63,6 @@ export default {
   methods: {
     goto(signal) {
       this.$router.push({ name: signal, params: { prev: this.$route.name } });
-    },
-    process() {
-      setTimeout(() => {
-        this.goto(this.nextSignal);
-      }, this.timeToChange);
     }
   },
   watch: {
@@ -74,11 +72,30 @@ export default {
       }
     }
   },
-  updated() {
-    this.process();
-  },
   mounted() {
-    this.process();
+    this.$on('startTimer', () => {
+      this.interval = setInterval(() => {
+        this.time -= 1000;
+      }, 1000);
+    });
+
+    this.$on('updateTimer', () => {
+      this.time = this.timeToChange;
+    });
+
+    this.$on('newSignal', () => {
+      setTimeout(() => {
+        this.signals[this.$route.name].fading = false;
+        this.goto(this.nextSignal);
+        this.$emit('newSignal');
+        this.$emit('updateTimer');
+      }, this.timeToChange);
+    });
+
+    this.time = this.timeToChange;
+
+    this.$emit('newSignal');
+    this.$emit('startTimer');
   }
 };
 </script>
@@ -120,6 +137,6 @@ export default {
 }
 
 .fading {
-  animation: pulse 1s infinite;
+  animation: pulse 0.7s infinite;
 }
 </style>
